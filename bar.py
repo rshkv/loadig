@@ -1,5 +1,4 @@
 from sys import stdout
-from time import sleep
 
 
 class Bar():
