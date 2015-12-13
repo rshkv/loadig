@@ -7,22 +7,22 @@ class Bar():
     Make sure your command line interface understands ANSI escape codes.
     """
 
-    def __init__(self, total=100, characters=40, message=None):
+    def __init__(self, total=100, characters=80, message=None):
         """
         total       (optional) the highest number representing 100%
         characters  (optional) the number of characters to print between the brackets
         message     (optional) inital message
         """
         self.total = total - 1  # Because most iterators go from 0 to len - 1
-        self.chars = characters - 2  # subtract two brackets
+        self.characters = characters - 7 # subtract two brackets and percentage
         self.percentage = 0
-        self.message = self._clean_message(message)
+        self.message = self._clean_message(message, characters)
         self.done = False  # To check if further printing is necessary
         # Print message if given, otherwise just an empty bar
         if message:  # Print message if given
             stdout.write(self.message + "\n")
         #  Print empty bar
-        stdout.write("\r[%s]  0%%" % (" " * self.chars))
+        stdout.write("\r[%s]  0%%" % (" " * self.characters))
 
     def update(self, value=None):
         """Updates the bar. Pass either a string or a number. 
@@ -58,18 +58,19 @@ class Bar():
         self.message = None
 
     @staticmethod
-    def _clean_message(msg):
-        """Make sure the message has no new lines, and is not longer than 80
-        characters.
+    def _clean_message(msg, characters):
+        """Make sure the message has no new lines, and is not longer than
+        'characters'.
         """
         msg = msg.replace("\n", "")
-        msg = msg[:80]
+        if len(msg) > characters:
+            msg = msg[:77] + "..."
         return msg
 
     def _update_message(self, msg):
         """Update message dislpayed above bar.
         """
-        msg = self._clean_message(msg)
+        msg = self._clean_message(msg, self.characters)
         if self.message:
             # If there was a message before go up a line
             stdout.write("\033[F")
@@ -86,10 +87,10 @@ class Bar():
         if new_percentage > self.percentage:
             self.percentage = new_percentage
             # Calculate number of characters to print
-            print_chars = int(round(self.percentage * self.chars))
+            print_chars = int(round(self.percentage * self.characters))
             # Build bar string
             bar_string = "=" * print_chars + \
-                " " * (self.chars - print_chars)
+                " " * (self.characters - print_chars)
             # Build percentage string
             percentage_string = "{0:.0f}%\r".format(new_percentage * 100) \
                                             .rjust(5)
