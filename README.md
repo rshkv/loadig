@@ -11,6 +11,7 @@ Loading...
 from loading.bar import Bar
 
 # Initialization
+bar = Bar()
 bar = Bar(total=100, characters=40, message="Loading...")
 
 # Update progress
