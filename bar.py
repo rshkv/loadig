@@ -7,7 +7,7 @@ class Bar():
     Make sure your command line interface understands ANSI escape codes.
     """
 
-    def __init__(self, total=100, characters=80, message=None):
+    def __init__(self, total=100, message=None, characters=80):
         """
         total       (optional) the highest number representing 100%
         characters  (optional) the number of characters to print between the brackets
