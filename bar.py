@@ -15,6 +15,7 @@ class Bar():
         """
         self.total = total - 1  # Because most iterators go from 0 to len - 1
         self.characters = characters - 7 # subtract two brackets and percentage
+        self.value = 0
         self.percentage = 0
         self.message = self._clean_message(message, characters)
         self.done = False  # To check if further printing is necessary
@@ -36,9 +37,13 @@ class Bar():
         if isinstance(value, str):
             self._update_message(value)
 
-        # Otherwise update progress
-        else:
+        # Otherwise update progress with value
+        elif value:
             self._update_progress(value)
+
+        # If no value is given, increment by one
+        elif value is None:
+            self._update_progress(self.value + 1)
 
     def clear(self):
         """Erase everything and move cursor to first position.
@@ -55,6 +60,7 @@ class Bar():
         # Initialize state
         self.done = False
         self.percentage = 0
+        self.value = 0
         self.message = None
 
     @staticmethod
@@ -81,6 +87,7 @@ class Bar():
     def _update_progress(self, val):
         """Update bar's left to right progress and percentage.
         """
+        self.value = val
         # Calculate the rounded percentage
         new_percentage = round(val/self.total, 2)
         # Only if the "visible" percentages changed printing is necessary

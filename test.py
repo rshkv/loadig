@@ -5,7 +5,7 @@ sleep_time = 0.01
 bar = Bar(message="Running test...")
 for i in range(0, 100):
     sleep(sleep_time)
-    bar.update(i)
+    bar.update()
     if i == 25:
         bar.update("Does this look good?")
     if i > 75:
@@ -14,11 +14,11 @@ bar.clear()
 
 for i in range(0, 100):
     sleep(sleep_time)
-    bar.update(i)
+    bar.update()
     if i == 50:
         bar.update("Did the clearing look good?")
 
 bar = Bar(message="This is another test...")
 for i in range(0, 100):
     sleep(sleep_time)
-    bar.update(i)
+    bar.update()
