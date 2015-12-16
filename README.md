@@ -15,8 +15,11 @@ bar = Bar()
 bar = Bar(total=100, characters=40, message="Loading...")
 
 # Update progress
-bar.update(1)
-bar.update(2)
+bar.update()  # Increment by one
+bar.update()
+...
+bar.update(23)  # Or set values explicitly
+bar.update(24)
 ...
 
 # Update message

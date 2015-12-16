@@ -14,7 +14,8 @@ class Bar():
         message     (optional) inital message
         """
         self.total = total - 1  # Because most iterators go from 0 to len - 1
-        self.characters = characters - 7 # subtract two brackets and percentage
+        # subtract two brackets and percentage
+        self.characters = characters - 7
         self.value = 0
         self.percentage = 0
         self.message = self._clean_message(message, characters)
