@@ -3,33 +3,36 @@ from sys import stdout
 
 class Bar():
 
-    """Use this class to display progress. 
+    """Use this class to display progress.
     Make sure your command line interface understands ANSI escape codes.
     """
 
     def __init__(self, total=100, message=None, characters=80):
         """
-        total       (optional) the highest number representing 100%
-        characters  (optional) the number of characters to print between the brackets
+        total       (optional) highest number representing 100%
+        characters  (optional) number of characters between brackets
         message     (optional) inital message
         """
-        self.total = total - 1  # Because most iterators go from 0 to len - 1
-        # subtract two brackets and percentage
-        self.characters = characters - 7
+        self.total = total - 1  # subtract 1 as most iterators go to n-1
+        self.characters = characters - 7  # 7 = 2 brackets + 5 percentage chars
         self.value = 0
         self.percentage = 0
-        self.message = self._clean_message(message, characters)
-        self.done = False  # To check if further printing is necessary
+        self.done = False
         # Print message if given, otherwise just an empty bar
-        if message:  # Print message if given
+        if message:
+            self.message = self._clean_message(message, characters)
             stdout.write(self.message + "\n")
+        else:
+            self.message = None
+
         #  Print empty bar
         stdout.write("\r[%s]  0%%" % (" " * self.characters))
 
     def update(self, value=None):
-        """Updates the bar. Pass either a string or a number. 
-        If you pass a string, it will be used to change the dislpayed message.
-        If you pass a number, the left to right progress and percentage will change.
+        """Pass either a string, a number or nothing as 'value'.
+        If passed a string, update the dislpayed message.
+        If passed a number, update progress and percentage.
+        If passed nothing, increment progress by one.
         """
         if self.done:  # Return if no further printing is necessary
             return
@@ -65,12 +68,12 @@ class Bar():
         self.message = None
 
     @staticmethod
-    def _clean_message(msg, characters):
+    def _clean_message(msg, chars):
         """Make sure the message has no new lines, and is not longer than
         'characters'.
         """
         msg = msg.replace("\n", "")
-        if len(msg) > characters:
+        if len(msg) > chars:
             msg = msg[:77] + "..."
         return msg
 
@@ -89,9 +92,9 @@ class Bar():
         """Update bar's left to right progress and percentage.
         """
         self.value = val
-        # Calculate the rounded percentage
         new_percentage = round(val/self.total, 2)
-        # Only if the "visible" percentages changed printing is necessary
+
+        # Print only if the visible percentages changed (2 decimal places)
         if new_percentage > self.percentage:
             self.percentage = new_percentage
             # Calculate number of characters to print
