@@ -1,7 +1,7 @@
 from bar import Bar
 from time import sleep
 
-sleep_time = 0.01
+sleep_time = 0.02
 bar = Bar(message="Running test...")
 for i in range(0, 100):
     sleep(sleep_time)
@@ -11,13 +11,14 @@ for i in range(0, 100):
     if i > 75:
         bar.update("Going to clear in %d" % (bar.total - i))
 bar.clear()
-
+sleep(1.0)
+bar = Bar()
 for i in range(0, 100):
     sleep(sleep_time)
     bar.update()
     if i == 50:
         bar.update("Did the clearing look good?")
-
+sleep(1.0)
 bar = Bar(message="This is another test...")
 for i in range(0, 100):
     sleep(sleep_time)

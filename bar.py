@@ -17,7 +17,6 @@ class Bar():
         self.characters = characters - 7  # 7 = 2 brackets + 5 percentage chars
         self.value = 0
         self.percentage = 0
-        self.done = False
         # Print message if given, otherwise just an empty bar
         if message:
             self.message = self._clean_message(message, characters)
@@ -26,7 +25,7 @@ class Bar():
             self.message = None
 
         #  Print empty bar
-        stdout.write("\r[%s]  0%%" % (" " * self.characters))
+        stdout.write("\r[%s]  0%%\n" % (" " * self.characters))
 
     def update(self, value=None):
         """Pass either a string, a number or nothing as 'value'.
@@ -34,9 +33,6 @@ class Bar():
         If passed a number, update progress and percentage.
         If passed nothing, increment progress by one.
         """
-        if self.done:  # Return if no further printing is necessary
-            return
-
         # If 'value' is a str update the message above the bar
         if isinstance(value, str):
             self._update_message(value)
@@ -52,17 +48,13 @@ class Bar():
     def clear(self):
         """Erase everything and move cursor to first position.
         """
-        clear_string = ""
-        if self.done:
-            # Move up a line if progress ended and a new line was opened
-            clear_string += "\033[F"
-        clear_string += "\r\033[K"  # Delete the line with the bar
+        clear_string = "\r\033[F\033[K"  # Delete the line with the bar
         if self.message:
             # Move up a line if a message was shown
             clear_string += "\033[F\033[K"
         stdout.write(clear_string)
+
         # Initialize state
-        self.done = False
         self.percentage = 0
         self.value = 0
         self.message = None
@@ -82,11 +74,11 @@ class Bar():
         """
         msg = self._clean_message(msg, self.characters)
         if self.message:
-            # If there was a message before go up a line
+            # If there was a message before go up an additional line
             stdout.write("\033[F")
         self.message = msg
         # Go back, clear the line and write the message
-        stdout.write("\r\033[K" + msg + "\n")
+        stdout.write("\r\033[F\033[K%s\n\n" % msg)
 
     def _update_progress(self, val):
         """Update bar's left to right progress and percentage.
@@ -106,9 +98,4 @@ class Bar():
             percentage_string = "{0:.0f}%\r".format(new_percentage * 100) \
                                             .rjust(5)
             # Write bar and percentage strings
-            stdout.write("\r[%s] %s" % (bar_string, percentage_string))
-
-            # If the percentage is 1.0
-            if new_percentage == 1.0:
-                self.done = True
-                stdout.write("\n")
+            stdout.write("\033[F\r[%s] %s\n" % (bar_string, percentage_string))
