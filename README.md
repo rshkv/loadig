@@ -8,7 +8,7 @@ Loading...
 
 # Usage
 ```python
-from loading.bar import Bar
+from loadig import Bar
 
 # Initialization
 bar = Bar()
