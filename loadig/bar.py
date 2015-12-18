@@ -13,7 +13,7 @@ class Bar():
         characters  (optional) number of characters between brackets
         message     (optional) inital message
         """
-        self.total = total - 1  # subtract 1 as most iterators go to n-1
+        self.total = total  # subtract 1 as most iterators go to n-1
         self.characters = characters - 7  # 7 = 2 brackets + 5 percentage chars
         self.value = 0
         self.percentage = 0
