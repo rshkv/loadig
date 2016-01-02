@@ -92,7 +92,7 @@ class Bar():
             # Calculate number of characters to print
             print_chars = int(round(self.percentage * self.characters))
             # Build bar string
-            bar_string = "=" * print_chars + \
+            bar_string = "█" * print_chars + \
                 " " * (self.characters - print_chars)
             # Build percentage string
             percentage_string = "{0:.0f}%\r".format(new_percentage * 100) \

@@ -1,4 +1,4 @@
-from loading.bar import Bar
+from loadig import Bar
 from time import sleep
 
 sleep_time = 0.02
