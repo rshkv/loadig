@@ -8,7 +8,7 @@ Loading...
 
 # Installation
 ```
-pip3 install loadig
+pip install loadig
 ```
 
 # Usage
