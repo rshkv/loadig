@@ -2,7 +2,7 @@
 A minimal progress bar for Python.
 
 ```
-Loading...
+Loadig...
 [===========================           ]  72%
 ```
 
