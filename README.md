@@ -6,6 +6,11 @@ Loading...
 [===========================           ]  72%
 ```
 
+# Installation
+```
+pip3 install loadig
+```
+
 # Usage
 ```python
 from loadig import Bar
