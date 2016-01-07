@@ -8,7 +8,7 @@ setup(
     author='Willi Raschkowski',
     author_email='willi.raschkowski@student.hpi.de',
     url='https://github.com/busfahren/loadig',
-    download_url='https://github.com/busfahren/loadig/tarball/0.2g',
+    download_url='https://github.com/busfahren/loadig/tarball/0.3g',
     keywords=['bar', 'loading', 'progress', 'logging'],
     classifiers=[]
 )
