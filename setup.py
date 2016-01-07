@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='loadig',
     packages=['loadig'],
-    version='0.2',
+    version='0.3',
     description='A minimal progress bar.',
     author='Willi Raschkowski',
     author_email='willi.raschkowski@student.hpi.de',
