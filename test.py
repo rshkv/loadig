@@ -3,6 +3,7 @@ from time import sleep
 
 sleep_time = 0.02
 bar = Bar(message="Running test...")
+sleep(1)
 for i in range(0, 100):
     sleep(sleep_time)
     bar.update()

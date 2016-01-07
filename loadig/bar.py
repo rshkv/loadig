@@ -25,7 +25,7 @@ class Bar():
             self.message = None
 
         #  Print empty bar
-        stdout.write("\r[%s]  0%%\n" % (" " * self.characters))
+        stdout.write("\r[%s]   0%%\n" % (" " * self.characters))
 
     def update(self, value=None):
         """Pass either a string, a number or nothing as 'value'.
