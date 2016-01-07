@@ -2,8 +2,13 @@
 A minimal progress bar for Python.
 
 ```
-Loading...
+Loadig...
 [===========================           ]  72%
+```
+
+# Installation
+```
+pip install loadig
 ```
 
 # Usage
