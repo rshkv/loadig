@@ -83,6 +83,9 @@ class Bar():
     def _update_progress(self, val):
         """Update bar's left to right progress and percentage.
         """
+        if self.total < val:
+            val = self.total
+            
         self.value = val
         new_percentage = round(val/self.total, 2)
 
