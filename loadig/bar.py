@@ -1,4 +1,5 @@
 from sys import stdout
+from datetime import datetime
 from .utilities import get_terminal_size
 
 
@@ -8,7 +9,8 @@ class Bar:
     """
 
     bracket_characters = 2
-    percentage_characters = 6
+    percentage_characters = 5
+    time_characters = 11
 
     def __init__(self, total, message=None, columns=None):
         """ Args:
@@ -20,14 +22,12 @@ class Bar:
         self.characters = self._calculate_characters(columns)
         self.value = 0
         self.percentage = 0
-        # Print message if given, otherwise just an empty bar
+        self.message = self._clean_message(message)
         if message:
-            self.message = self._clean_message(message)
             stdout.write(self.message + "\n")
-        else:
-            self.message = None
         # Print empty bar
         stdout.write("\r[%s]   0%%\n" % (" " * self.characters))
+        self.start_time = datetime.now()
 
     def update(self, value=None):
         """ Pass either a string, a number or nothing as 'value'.
@@ -48,7 +48,7 @@ class Bar:
     def clear(self):
         """Erase everything and move cursor to first position.
         """
-        clear_string = "\r\033[F\033[K"  # Delete the line with the bar
+        clear_string = "\r\033[F\033[K"  # Delete the bottom line
         if self.message is not None:
             # Move up a line if a message was shown
             clear_string += "\033[F\033[K"
@@ -59,14 +59,18 @@ class Bar:
         self.message = None
 
     def _calculate_characters(self, columns):
+        """Calculate number of characters to use inside of brackets.
+        """
         if columns is None:
             columns = get_terminal_size()[0]
-        return columns - self.bracket_characters - self.percentage_characters
+        return (columns - self.bracket_characters -
+                self.percentage_characters - self.time_characters)
 
     def _clean_message(self, msg):
-        """Make sure the message has no new lines, and is not longer than
-        'characters'.
+        """Cleans the message of new lines and slices to fit onto line.
         """
+        if msg is None:
+            return None
         msg = msg.replace("\n", "")
         if len(msg) > self.characters:
             msg = msg[:(self.characters - 3)] + "..."
@@ -84,24 +88,30 @@ class Bar:
         stdout.write("\r\033[F\033[K%s\n\n" % msg)
 
     def _update_progress(self, val):
-        """Update bar's left to right progress and percentage.
+        """Update bar's left to right progress, percentage and time.
         """
         if self.total < val:
             val = self.total
-
         self.value = val
-        new_percentage = round(val / self.total, 2)
-
-        # Print only if the visible percentages changed (2 decimal places)
-        if new_percentage > self.percentage:
-            self.percentage = new_percentage
-            # Write bar and percentage strings
-            stdout.write("\033[F\r%s\n" % self.bottom_line_string())
+        self.percentage = round(val / self.total, 2)
+        # Write bar and percentage strings
+        stdout.write("\033[F\r%s\n" % self.bottom_line_string())
 
     def bottom_line_string(self):
+        """Generate string to be printed as bottom line.
+        Containing the bar itself, percentage of progress and expected time.
+        """
         progress_characters = int(round(self.percentage * self.characters))
         bar_string = "[" + "█" * progress_characters + \
                      " " * (self.characters - progress_characters) + "]"
-        percentage_string = "{0:.0f}%\r".format(self.percentage * 100) \
+        percentage_string = "{0:.0f}%".format(self.percentage * 100) \
             .rjust(self.percentage_characters)
-        return bar_string + percentage_string
+        time_string = self.wait_time()
+        return bar_string + percentage_string + time_string
+
+    def wait_time(self):
+        """Get time passed since initialization and approximate time to end.
+        """
+        passed_time = datetime.now() - self.start_time
+        expected_time = passed_time * (1 / self.percentage - 1)
+        return str(expected_time).split('.')[0].rjust(self.time_characters)
