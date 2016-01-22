@@ -7,15 +7,13 @@ class Bar:
     """ Use this class to display progress.
     Make sure your command line interface understands ANSI escape codes.
     """
-
-    bracket_characters = 2
     percentage_characters = 5
     time_characters = 11
 
     def __init__(self, total, message=None, columns=None):
         """ Args:
             total (int): highest number representing 100%
-            columns (Optional[int]): number of characters between brackets
+            columns (Optional[int]): number of characters in line
             message (Optional[int]): initial message
         """
         self.total = total  # subtract 1 as most iterators go to n-1
@@ -26,7 +24,7 @@ class Bar:
         if message:
             stdout.write(self.message + "\n")
         # Print empty bar
-        stdout.write("\r[%s]   0%%\n" % (" " * self.characters))
+        stdout.write("\r%s   0%%\n" % (" " * self.characters))
         self.start_time = datetime.now()
 
     def update(self, value=None):
@@ -59,12 +57,12 @@ class Bar:
         self.message = None
 
     def _calculate_characters(self, columns):
-        """Calculate number of characters to use inside of brackets.
+        """Calculate number of characters to use for bar.
         """
         if columns is None:
             columns = get_terminal_size()[0]
-        return (columns - self.bracket_characters -
-                self.percentage_characters - self.time_characters)
+        return (columns - self.percentage_characters -
+                self.time_characters)
 
     def _clean_message(self, msg):
         """Cleans the message of new lines and slices to fit onto line.
@@ -102,8 +100,8 @@ class Bar:
         Containing the bar itself, percentage of progress and expected time.
         """
         progress_characters = int(round(self.percentage * self.characters))
-        bar_string = "[" + "█" * progress_characters + \
-                     " " * (self.characters - progress_characters) + "]"
+        bar_string = "█" * progress_characters + \
+                     " " * (self.characters - progress_characters)
         percentage_string = "{0:.0f}%".format(self.percentage * 100) \
             .rjust(self.percentage_characters)
         time_string = self.wait_time()
