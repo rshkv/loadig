@@ -1,25 +1,28 @@
 from sys import stdout
+from .utilities import get_terminal_size
 
 
-class Bar():
+class Bar:
 
-    """Use this class to display progress.
+    """ Use this class to display progress.
     Make sure your command line interface understands ANSI escape codes.
     """
 
-    def __init__(self, total=100, message=None, characters=80):
-        """
-        total       (optional) highest number representing 100%
-        characters  (optional) number of characters between brackets
-        message     (optional) inital message
+    def __init__(self, total, message=None, characters=None):
+        """ Args:
+            total (int): highest number representing 100%
+            characters (Optional[int]): number of characters between brackets
+            message (Optional[int]): initial message
         """
         self.total = total  # subtract 1 as most iterators go to n-1
-        self.characters = characters - 7  # 7 = 2 brackets + 5 percentage chars
+        # 7 = 2 brackets + 5 percentage chars
+        self.characters = (characters - 7 if characters
+                           else get_terminal_size()[0] - 7)
         self.value = 0
         self.percentage = 0
         # Print message if given, otherwise just an empty bar
         if message:
-            self.message = self._clean_message(message, characters)
+            self.message = self._clean_message(message, self.characters)
             stdout.write(self.message + "\n")
         else:
             self.message = None
@@ -28,7 +31,7 @@ class Bar():
         stdout.write("\r[%s]   0%%\n" % (" " * self.characters))
 
     def update(self, value=None):
-        """Pass either a string, a number or nothing as 'value'.
+        """ Pass either a string, a number or nothing as 'value'.
         If passed a string, update the dislpayed message.
         If passed a number, update progress and percentage.
         If passed nothing, increment progress by one.
@@ -85,7 +88,7 @@ class Bar():
         """
         if self.total < val:
             val = self.total
-            
+
         self.value = val
         new_percentage = round(val/self.total, 2)
 
