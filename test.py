@@ -1,7 +1,15 @@
 from loadig import Bar
 from time import sleep
 
+
 sleep_time = 0.02
+
+sleep(1.0)
+bar = Bar(total=100, message="This is another test...This is another test...This is another test...This is another test...This is anothThis is another test...This is another test...This is another test...This is another test...This is another test...This is another test...er test...This is another test...This is another test...")
+for i in range(0, 100):
+    sleep(sleep_time)
+    bar.update()
+
 bar = Bar(total=100, message="Running test...")
 sleep(1)
 for i in range(0, 100):
