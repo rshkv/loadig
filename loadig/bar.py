@@ -7,6 +7,9 @@ class Bar:
     Make sure your command line interface understands ANSI escape codes.
     """
 
+    bracket_characters = 2
+    percentage_characters = 6
+
     def __init__(self, total, message=None, columns=None):
         """ Args:
             total (int): highest number representing 100%
@@ -14,7 +17,6 @@ class Bar:
             message (Optional[int]): initial message
         """
         self.total = total  # subtract 1 as most iterators go to n-1
-        # 7 = 2 brackets + 5 percentage chars
         self.characters = self._calculate_characters(columns)
         self.value = 0
         self.percentage = 0
@@ -56,13 +58,10 @@ class Bar:
         self.value = 0
         self.message = None
 
-    @staticmethod
-    def _calculate_characters(columns):
-        bracket_characters = 2
-        percentage_characters = 5
+    def _calculate_characters(self, columns):
         if columns is None:
             columns = get_terminal_size()[0]
-        return columns - bracket_characters - percentage_characters
+        return columns - self.bracket_characters - self.percentage_characters
 
     def _clean_message(self, msg):
         """Make sure the message has no new lines, and is not longer than
@@ -96,13 +95,13 @@ class Bar:
         # Print only if the visible percentages changed (2 decimal places)
         if new_percentage > self.percentage:
             self.percentage = new_percentage
-            # Calculate number of characters to print
-            print_chars = int(round(self.percentage * self.characters))
-            # Build bar string
-            bar_string = "█" * print_chars + \
-                         " " * (self.characters - print_chars)
-            # Build percentage string
-            percentage_string = "{0:.0f}%\r".format(new_percentage * 100) \
-                .rjust(5)
             # Write bar and percentage strings
-            stdout.write("\033[F\r[%s] %s\n" % (bar_string, percentage_string))
+            stdout.write("\033[F\r%s\n" % self.bottom_line_string())
+
+    def bottom_line_string(self):
+        progress_characters = int(round(self.percentage * self.characters))
+        bar_string = "[" + "█" * progress_characters + \
+                     " " * (self.characters - progress_characters) + "]"
+        percentage_string = "{0:.0f}%\r".format(self.percentage * 100) \
+            .rjust(self.percentage_characters)
+        return bar_string + percentage_string
