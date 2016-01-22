@@ -3,7 +3,7 @@ A minimal progress bar for Python.
 
 ```
 Loadig...
-[===========================           ]  72%
+████████████████████████████████████████      91%    0:01:43
 ```
 
 # Installation
@@ -17,7 +17,7 @@ from loadig import Bar
 
 # Initialization
 bar = Bar()
-bar = Bar(total=100, characters=40, message="Loading...")
+bar = Bar(total=100, message="Loading...")
 
 # Update progress
 bar.update()  # Increment by one
