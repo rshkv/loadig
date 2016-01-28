@@ -1,6 +1,6 @@
 from sys import stdout
 from datetime import datetime
-from .utilities import get_terminal_size
+from loadig.utilities import get_terminal_size
 
 
 class Bar:
@@ -104,12 +104,14 @@ class Bar:
                      " " * (self.characters - progress_characters)
         percentage_string = "{0:.0f}%".format(self.percentage * 100) \
             .rjust(self.percentage_characters)
-        time_string = self.wait_time()
+        time_string = self.wait_time().rjust(self.time_characters)
         return bar_string + percentage_string + time_string
 
     def wait_time(self):
         """Get time passed since initialization and approximate time to end.
         """
+        if self.percentage < 0.01:
+            return ""
         passed_time = datetime.now() - self.start_time
         expected_time = passed_time * (1 / self.percentage - 1)
-        return str(expected_time).split('.')[0].rjust(self.time_characters)
+        return str(expected_time).split('.')[0]
