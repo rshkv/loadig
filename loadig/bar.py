@@ -1,6 +1,6 @@
-from sys import stdout
 from datetime import datetime
-from loadig.utilities import get_terminal_size
+from sys import stdout
+import shutil
 
 
 class Bar:
@@ -60,7 +60,7 @@ class Bar:
         """Calculate number of characters to use for bar.
         """
         if columns is None:
-            columns = get_terminal_size()[0]
+            columns = shutil.get_terminal_size()[0]
         return (columns - self.percentage_characters -
                 self.time_characters)
 
