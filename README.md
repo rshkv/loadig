@@ -1,35 +1,40 @@
 # Loadig...
 A minimal progress bar for Python.
 
-```
-Loadig...
-████████████████████████████████████████      91%    0:01:43
-```
+![Loadig preview](https://www.dropbox.com/s/9y4f0awhc8pq92i/loadig.png?dl=1 "Loadig preview")
 
-# Installation
-```
-pip3 install loadig
-```
+## Requirements
+Make sure you are using Python **3.3** and your terminal supports ANSI Escape Codes. 
 
-# Usage
+## Installation
+```
+pip install loadig
+```
+(Yes, *loading* was taken.)
+
+## Usage
 ```python
 from loadig import Bar
+```
 
-# Initialization
-bar = Bar()
-bar = Bar(total=100, message="Loading...")
+### Initialization
+Pass the total value (your 100%). You can pass a message to display above the bar. `shutil` is used to get the number of columns in your terminal. If you know what you want in life, you can also pass a number of columns to use.
+```python
+bar = Bar(total=100)
+bar = Bar(100, message="Loading...")
+bar = Bar(100, columns=80)
+```
 
-# Update progress
-bar.update()  # Increment by one
-bar.update()
-...
-bar.update(23)  # Or set values explicitly
-bar.update(24)
-...
+### Update Progress
+Pass a number or string to update the bar or message, respectively. If nothing is passed, the value -not percentage- is inceremented by one.
+```python
+bar.update()  #  Increment by one
+bar.update(23)  #  Set values explicitly
+bar.update("Damn, still loading...")  #  Update the message
+```
 
-# Update message
-bar.update("Damn, still loading...")
-
-# Clear everything
+### Clearing
+The cursor is always kept under the bar so you don't have to worry about going to a new line before you... well, do other things. Anyway, you can get rid of it.
+```python
 bar.clear()
 ```
