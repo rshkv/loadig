@@ -2,6 +2,11 @@ from datetime import datetime
 from sys import stdout
 import shutil
 
+CURSOR_UP = "\033[A"
+CLEAR_LINE = "\033[K"
+CURSOR_START = "\r"
+NEW_LINE = "\n"
+
 
 class Bar:
     """ Use this class to display progress.
@@ -22,10 +27,12 @@ class Bar:
         self.percentage = 0
         self.message = self._clean_message(message)
         if message:
-            stdout.write(self.message + "\n")
+            stdout.write(self.message + NEW_LINE)
         # Print empty bar
-        stdout.write("\r%s   0%%\n" % (" " * self.characters))
-        self.start_time = datetime.now()
+        stdout.write(CURSOR_START +
+                     "%s   0%%" % (" " * self.characters) +
+                     NEW_LINE)
+        self.start_time = None
 
     def update(self, value=None):
         """ Pass either a string, a number or nothing as 'value'.
@@ -46,10 +53,11 @@ class Bar:
     def clear(self):
         """Erase everything and move cursor to first position.
         """
-        clear_string = "\r\033[F\033[K"  # Delete the bottom line
+        # Delete the bottom line
+        clear_string = CURSOR_START + CURSOR_UP + CLEAR_LINE
         if self.message is not None:
             # Move up a line if a message was shown
-            clear_string += "\033[F\033[K"
+            clear_string += CURSOR_UP + CLEAR_LINE
         stdout.write(clear_string)
         # Initialize state
         self.percentage = 0
@@ -80,20 +88,28 @@ class Bar:
         msg = self._clean_message(msg)
         if self.message:
             # If there was a message before go up an additional line
-            stdout.write("\033[F")
+            stdout.write(CURSOR_UP)
         self.message = msg
         # Go back, clear the line and write the message
-        stdout.write("\r\033[F\033[K%s\n\n" % msg)
+        stdout.write(CURSOR_START + CURSOR_UP +
+                     CLEAR_LINE + msg + 2 * NEW_LINE)
 
     def _update_progress(self, val):
         """Update bar's left to right progress, percentage and time.
         """
+        # Start measuring time if not measuring already
+        if not self.start_time:
+            self.start_time = datetime.now()
+
         if self.total < val:
             val = self.total
         self.value = val
-        self.percentage = round(val / self.total, 2)
-        # Write bar and percentage strings
-        stdout.write("\033[F\r%s\n" % self.bottom_line_string())
+        new_percentage = round(val / self.total, 2)
+        if new_percentage != self.percentage:
+            self.percentage = new_percentage
+            # Write bar and percentage strings
+            stdout.write(CURSOR_UP + CURSOR_START +
+                         self.bottom_line_string() + NEW_LINE)
 
     def bottom_line_string(self):
         """Generate string to be printed as bottom line.
@@ -110,7 +126,7 @@ class Bar:
     def wait_time(self):
         """Get time passed since initialization and approximate time to end.
         """
-        if self.percentage < 0.01:
+        if self.value < 2:
             return ""
         passed_time = datetime.now() - self.start_time
         expected_time = passed_time * (1 / self.percentage - 1)

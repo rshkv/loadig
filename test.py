@@ -2,12 +2,12 @@ from loadig import Bar
 from time import sleep
 
 
-sleep_time = 0.1
+sleep_time = 0.2
 
-bar = Bar(total=100, message="Loadig...", columns=60)
-for i in range(0, 100):
-    sleep(sleep_time)
-    bar.update()
+bar = Bar(total=1000, message="Loadig...", columns=60)
+for i in range(0, 1000):
+    sleep(sleep_time/10)
+    bar.update(i)
 
 bar = Bar(total=100, message="Running test...")
 sleep(1)
