@@ -1,7 +1,7 @@
 # Loadig...
 A minimal progress bar for Python.
 
-![Loadig preview](https://www.dropbox.com/s/9y4f0awhc8pq92i/loadig.png?dl=1 "Loadig preview")
+![Loadig preview](https://www.dropbox.com/s/8qe15kz524mb24g/loadig.png?dl=1 "Loadig preview")
 
 ## Requirements
 Make sure you are using Python **3.3** and your terminal supports ANSI Escape Codes. 
